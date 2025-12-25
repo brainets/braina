@@ -13,7 +13,7 @@ This tutorial series takes you from information theory basics to sophisticated a
 - **Higher-order interactions**: Synergy, redundancy, and emergent phenomena like the XOR problem
 - **Practical tools**: HOI, Frites, and XGI packages for real-world analysis
 - **Time-resolved analysis**: Dynamic information flow in neural time series
-- **Network representations**: Hypergraphs for higher-order structures
+- **Network representations**: Hypergraphs for higher-order structureshttps://www.int.univ-amu.fr/recherche-int/equipes/brainets
 - **Complete pipelines**: End-to-end analysis from raw data to scientific insights
 
 ## 📚 Tutorial Structure
