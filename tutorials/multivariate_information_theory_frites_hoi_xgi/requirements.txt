@@ -1,0 +1,36 @@
+# Core scientific computing
+numpy>=1.21.0
+scipy>=1.7.0
+matplotlib>=3.4.0
+seaborn>=0.11.0
+pandas>=1.3.0
+
+# Jupyter and notebook tools
+jupyter>=1.0.0
+jupyterlab>=3.0.0
+notebook>=6.4.0
+ipywidgets>=7.6.0
+
+# Information theory and higher-order interactions
+hoi>=0.2.0
+jax>=0.4.0
+jaxlib>=0.4.0
+
+# Neural time series analysis
+frites>=0.4.0
+mne>=1.0.0
+
+# Network and hypergraph analysis
+xgi>=0.7.0
+networkx>=2.6.0
+
+# Additional utilities
+scikit-learn>=1.0.0
+tqdm>=4.62.0
+
+# Visualization enhancements
+plotly>=5.0.0
+
+# Optional: for PDF rendering in Quarto
+# pandoc  # Install separately: https://pandoc.org/installing.html
+# quarto  # Install separately: https://quarto.org/docs/get-started/
