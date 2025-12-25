@@ -281,8 +281,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 This tutorial integrates three excellent open-source packages:
 
-- **HOI** by Etienne Combrisson and team
-- **Frites** by Etienne Combrisson and team  
+- **HOI** by Etienne Combrisson and BraiNets team https://www.int.univ-amu.fr/recherche-int/equipes/brainets
+- **Frites** by Etienne Combrisson, Matteo Neri and BraiNets team https://www.int.univ-amu.fr/recherche-int/equipes/brainets
 - **XGI** by the Comple(X) Group Interactions team
 
 Thanks to the broader neuroscience and complex systems communities for developing the theoretical foundations these tools implement.
