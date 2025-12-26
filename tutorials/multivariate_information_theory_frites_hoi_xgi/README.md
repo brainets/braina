@@ -3,6 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
+Copy from Giovanni Petri's tutorial https://lordgrilo.github.io/cnww-hoi/
+
 A comprehensive, hands-on tutorial series for understanding and applying multivariate information theory to neuroscience and complex systems. This repository provides progressive notebooks that build from foundational concepts to complete analysis pipelines using state-of-the-art Python packages.
 
 ## 🎯 What You'll Learn
@@ -13,7 +15,7 @@ This tutorial series takes you from information theory basics to sophisticated a
 - **Higher-order interactions**: Synergy, redundancy, and emergent phenomena like the XOR problem
 - **Practical tools**: HOI, Frites, and XGI packages for real-world analysis
 - **Time-resolved analysis**: Dynamic information flow in neural time series
-- **Network representations**: Hypergraphs for higher-order structureshttps://www.int.univ-amu.fr/recherche-int/equipes/brainets
+- **Network representations**: Hypergraphs for higher-order interactions
 - **Complete pipelines**: End-to-end analysis from raw data to scientific insights
 
 ## 📚 Tutorial Structure
@@ -282,7 +284,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 This tutorial integrates three excellent open-source packages:
 
 - **HOI** by Etienne Combrisson and BraiNets team https://www.int.univ-amu.fr/recherche-int/equipes/brainets
-- **Frites** by Etienne Combrisson, Matteo Neri and BraiNets team https://www.int.univ-amu.fr/recherche-int/equipes/brainets
+- **Frites** by Etienne Combrisson, Matteo Neri and BraiNets team  https://www.int.univ-amu.fr/recherche-int/equipes/brainets
 - **XGI** by the Comple(X) Group Interactions team
 
 Thanks to the broader neuroscience and complex systems communities for developing the theoretical foundations these tools implement.
