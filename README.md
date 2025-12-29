@@ -51,3 +51,4 @@ The `tutorials/` directory provides practical examples and hands-on tutorials to
 
 *   **`multivariate_information_theory_frites_hoi_xgi/`**: This tutorial focuses on the integration of `frites`, `hoi`, and `xgi` for performing multivariate information theory analysis. Copied from Giovanni Petri's "Multivariate Information Theory: A Practical Tutorial with HOI, Frites, and XGI" https://github.com/lordgrilo/cnww-hoi
 *   **`seeg_ebrains_frites/`**: This tutorial demonstrates how to use the `frites` toolbox to analyze SEEG data, with examples from the ebrains platform. Dataset from Lachaux, J.-P., Rheims, S., Chatard, B., Dupin, M., & Bertrand, O. (2023). Human Intracranial Database (release-5) [Data set]. EBRAINS. https://doi.org/10.25493/FCPJ-NZ
+*   **`example_learning_toolbox.md`**: This document contains a guided tour of Frites and HOI generated the gemini-cli is the Prompt Library Extension 
