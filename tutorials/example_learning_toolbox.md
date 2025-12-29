@@ -255,7 +255,7 @@ print(hoi_df.sort_values(by="hoi_val", ascending=False).head(1))
 
 ### 15. Learning Resources
 
--   **Documentation**: The official documentation for [Frites](https://frites.net/) and [HOI](https://hoi-toolbox.org/). They contain examples and API references.
+-   **Documentation**: The official documentation for [Frites](https://github.com/brainets/frites) and [HOI](https://github.com/brainets/hoi). They contain examples and API references.
 -   **Tutorials**: The Jupyter notebooks in your project (`/tutorials/multivariate_information_theory_frites_hoi_xgi/`) are an excellent resource.
 -   **Research Paper (HOI)**: [Neri, A., et al. (2024). HOI: a Python package for the discovery of high-order interactions in complex systems.](https://joss.theoj.org/papers/10.21105/joss.05834)
 -   **Research Paper (Frites)**: [Combrisson, E., et al. (2019). Frites: A Python toolbox for functional connectivity and information-theoretic analysis of electrophysiological data.](https://joss.theoj.org/papers/10.21105/joss.03842.pdf)
