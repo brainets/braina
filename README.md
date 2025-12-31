@@ -1,5 +1,5 @@
-<p align="center">
-  <img src="docs/braina_logo.png" alt="Braina logo" width="240"/>
+<p align="left">
+  <img src="docs/braina_logo.png" alt="Braina logo" width="200"/>
 </p>
 
 # AI agent for Brain Interaction Analysis (Braina)
