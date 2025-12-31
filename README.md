@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/braina_logo.png" alt="Braina logo" width="240"/>
+</p>
+
 # AI agent for Brain Interaction Analysis (Braina)
 
 This project is dedicated to the development of an AI agent for the analysis of complex neural interactions using a combination of toolboxes: `frites`, `hoi`, and `xgi`. It serves as a comprehensive resource for researchers and students interested in applying information-theoretical measures for the analysis of functional interactions from electrophysiological data, such as fMRI, MEG, EEG, LFP, MUA multivariate time series. 
