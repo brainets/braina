@@ -1,4 +1,4 @@
-<p align="left">
+<p align="center">
   <img src="docs/braina_logo.png" alt="Braina logo" width="300"/>
 </p>
 
