@@ -14,7 +14,7 @@ To create the expert AI agent, you will need to have the `gemini-cli` installed 
 
 You can find the latest installation instructions for `gemini-cli` in the official documentation:
 
-*   [https://github.com/google/gemini-cli](https://github.com/google/gemini-cli)
+*   [https://github.com/google/gemini-cli](https://github.com/google-gemini/gemini-cli)
 
 ## Gemini CLI and AI Agent Setup
 
