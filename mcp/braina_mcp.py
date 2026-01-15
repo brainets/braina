@@ -55,6 +55,36 @@ def save_data(data, path: str):
         raise ValueError(f"Unsupported export format for {path}. Use .npy or .nc")
     return path
 
+@mcp.tool()
+def inspect_data(path: str) -> str:
+    """
+    Inspect a neurophysiological data file (.npy or .nc).
+
+    Returns metadata about the file including shape, data type, and
+    coordinates/dimensions if available (NetCDF).
+    """
+    try:
+        data = load_data(path)
+        info = []
+        info.append(f"File: {path}")
+        info.append(f"Type: {type(data)}")
+        info.append(f"Shape: {data.shape}")
+        info.append(f"Dtype: {data.dtype}")
+
+        if isinstance(data, (xr.DataArray, xr.Dataset)):
+            info.append(f"Dimensions: {data.dims}")
+            if hasattr(data, 'coords'):
+                info.append("Coordinates:")
+                for coord_name, coord_val in data.coords.items():
+                    vals_preview = coord_val.values[:3] if len(coord_val) > 0 else []
+                    info.append(f"  - {coord_name}: {coord_val.values.shape} values (e.g., {vals_preview}...)")
+            if hasattr(data, 'attrs'):
+                 info.append(f"Attributes: {list(data.attrs.keys())}")
+
+        return "\n".join(info)
+    except Exception as e:
+        return f"Error inspecting file: {str(e)}"
+
 # --- Frites Connectivity Wrappers ---
 
 @mcp.tool()
@@ -70,7 +100,7 @@ def frites_conn_covgc(data_path: str, output_path: str, dt: int, lag: int, t0: l
     data_path : str
         Path to input data (npy or nc). Shape: (n_epochs, n_roi, n_times)
     output_path : str
-        Path to save the output data.
+        Path to save the output data. Use .nc extension to preserve metadata (ROI names, times).
     dt : int
         Duration of the time window for covariance correlation in samples
     lag : int
@@ -112,7 +142,7 @@ def frites_conn_dfc(data_path: str, output_path: str, win_sample: list[list[int]
     data_path : str
         Path to input data (npy or nc). Shape: (n_epochs, n_roi, n_times)
     output_path : str
-        Path to save the output data.
+        Path to save the output data. Use .nc extension to preserve metadata (ROI names, times).
     win_sample : list | None
         List of [start, stop] indices for windows. If None, uses entire time.
     agg_ch : bool | False
@@ -143,7 +173,7 @@ def frites_conn_pid(data_path: str, y_path: str, output_path_prefix: str, mi_typ
     y_path : str
         Path to behavior/stimulus data (y).
     output_path_prefix : str
-        Prefix for output files (will generate _unique.nc, _redundancy.nc, etc.)
+        Prefix for output files (will generate _unique.nc, _redundancy.nc, etc.). Generates .nc files to preserve metadata.
     mi_type : {'cc', 'cd'}
         Mutual information type. 'cc' (continuous-continuous) or 'cd' (continuous-discrete).
     """
@@ -178,7 +208,7 @@ def frites_conn_ii(data_path: str, y_path: str, output_path: str, mi_type: str =
     y_path : str
         Path to behavior variable.
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names, times).
     mi_type : {'cc', 'cd'}
         Mutual information type.
     dt : int
@@ -202,7 +232,7 @@ def frites_conn_te(data_path: str, output_path: str, max_delay: int = 30, min_de
     data_path : str
         Path to data.
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names, times).
     max_delay : int
         Number of time points defining where to stop looking at in the past.
     min_delay : int
@@ -229,7 +259,7 @@ def frites_conn_fit(data_path: str, y_path: str, output_path: str, mi_type: str 
     y_path : str
         Path to feature (y).
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names, times).
     mi_type : {'cc', 'cd'}
         Mutual information type.
     max_delay : float
@@ -261,7 +291,7 @@ def frites_conn_spec(data_path: str, output_path: str, freqs: list[float], metri
     data_path : str
         Path to input data.
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names, times).
     freqs : list
         Array of central frequencies.
     metric : 'coh' | 'plv' | 'sxy'
@@ -301,7 +331,7 @@ def frites_conn_ccf(data_path: str, output_path: str, max_delay: int = 30) -> st
     data_path : str
         Path to input data.
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names, times).
     max_delay : int
         Note: Standard conn_ccf computes full lags. If cropping is needed, handle post-hoc.
     """
@@ -320,7 +350,7 @@ def frites_sim_ar(output_path: str, ar_type: str = 'hga', n_epochs: int = 100, n
     Parameters
     ----------
     output_path : str
-        Path to save simulated data.
+        Path to save simulated data. Use .nc extension to preserve metadata.
     ar_type : 'hga' | 'osc_20' | 'osc_40' | 'ding_2'
     n_epochs : int
     n_times : int
@@ -344,7 +374,7 @@ def hoi_gradient_oinfo(data_path: str, y_path: str, output_path: str, minsize: i
     y_path : str
         Path to target variable.
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names).
     """
     x = load_data(data_path)
     y = load_data(y_path)
@@ -555,7 +585,7 @@ def hoi_oinfo(data_path: str, output_path: str, y_path: str = None, minsize: int
     data_path : str
         Path to input data (n_samples, n_features, [n_variables]).
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names).
     y_path : str | None
         Path to task-related feature.
     minsize : int
@@ -585,7 +615,7 @@ def hoi_infotopo(data_path: str, output_path: str, minsize: int = 1, maxsize: in
     data_path : str
         Path to input data.
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names).
     minsize : int
         Minimum multiplet size.
     maxsize : int | None
@@ -611,7 +641,7 @@ def hoi_redundancy_mmi(data_path: str, y_path: str, output_path: str, minsize: i
     y_path : str
         Path to feature (y).
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names).
     """
     x = load_data(data_path)
     y = load_data(y_path)
@@ -634,7 +664,7 @@ def hoi_synergy_mmi(data_path: str, y_path: str, output_path: str, minsize: int 
     y_path : str
         Path to feature (y).
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names).
     """
     x = load_data(data_path)
     y = load_data(y_path)
@@ -659,7 +689,7 @@ def hoi_rsi(data_path: str, y_path: str, output_path: str, minsize: int = 2, max
     y_path : str
         Path to feature (y).
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names).
     """
     x = load_data(data_path)
     y = load_data(y_path)
@@ -680,7 +710,7 @@ def hoi_dtc(data_path: str, output_path: str, y_path: str = None, minsize: int =
     data_path : str
         Path to input data.
     output_path : str
-        Path to save output.
+        Path to save output. Use .nc extension to preserve metadata (ROI names).
     """
     x = load_data(data_path)
     y = load_data(y_path) if y_path else None
