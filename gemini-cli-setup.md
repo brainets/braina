@@ -26,6 +26,25 @@ The Braina AI agent exploits specific Gemini CLI MPC extensions and tools to enh
 
 **Setup:** The `python-executor` tool may require configuration, such as specifying the path to your Python interpreter. For detailed and up-to-date instructions on how to set up the `python-executor` tool, please refer to the official Gemini CLI documentation.
 
+### Braina MCP Server
+
+**Purpose:** The `braina` MCP server is a custom tool included in this project (`braina/mcp/braina_mcp.py`). It exposes the core functionality of the `frites` and `hoi` libraries directly to the Gemini agent. This allows the agent to perform complex analyses (e.g., Granger Causality, O-Information, PID) by calling these tools directly, ensuring correct parameter usage and data handling.
+
+**Setup:** To use this server, you need to configure your Gemini CLI to run the `braina/mcp/braina_mcp.py` script. 
+
+Add the following to your `gemini-cli` configuration (usually in your global or project-specific config file):
+
+```json
+"mcpServers": {
+  "braina": {
+    "command": "uv",
+    "args": ["run", "braina/mcp/braina_mcp.py"]
+  }
+}
+```
+
+*Note: Ensure `uv` is installed and the dependencies are available.*
+
 ## Creating the `settings.json` File
 
 To configure the Gemini CLI MPC tools, you'll need to create a `settings.json` file. This file should be placed in a directory that your Gemini CLI can access (e.g., your project's root directory).

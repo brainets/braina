@@ -25,7 +25,8 @@ The core of this configuration involves:
 1.  **Installing the Gemini CLI:** Ensure you have the `gemini-cli` installed as per the instructions in the "Getting Started" section.
 2.  **Setting up MPC Tools:** Refer to the `gemini-cli-setup.md` file for detailed instructions on how to configure essential MPC tools like the GitHub MCP Tool and the Python Executor Tool. These tools enable the Gemini agent to interact with various aspects of your project.
 3.  **Configuring `settings.json`:** A `settings.json` file is used to store sensitive information and custom paths, such as your GitHub Personal Access Token (PAT) and the path to your Python interpreter. Instructions for creating and configuring this file are also provided in `gemini-cli-setup.md`.
-4.  **Suggested gemini-cli Extensions:** Suggested extension of gemini-cli is the Prompt Library, which contains professionally crafted prompts for common development tasks. 
+4.  **Braina MCP Server:** This project includes a custom MCP server (`braina/mcp/braina_mcp.py`) that exposes the core functionality of `frites` and `hoi` to the AI agent.
+5.  **Suggested gemini-cli Extensions:** Suggested extension of gemini-cli is the Prompt Library, which contains professionally crafted prompts for common development tasks. 
 
 By properly setting up these components, you can empower AI agents within this project to assist with tasks, code generation, analysis, and more, leveraging the capabilities of the Gemini large language models.
 
