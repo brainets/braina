@@ -12,5 +12,5 @@ Simulate a simple autoregressive model composed of a source signal X and a targe
 Take the data simulated in 1b and estimate dynamic functional connectivity between X and Y with the following parameters: window length = 0.75 seconds, win_step = 0.02  seconds
         a. Computed the DFC for each trial and plot the average time course across trials
         b. Test different window_length values and plot different examples, try to interpret the results
-5. Convert the md file using jupytext into a Jupyter notebook using jupytex
+5. Convert the md file using jupytext into a Jupyter notebook
 
