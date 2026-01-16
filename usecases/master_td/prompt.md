@@ -3,7 +3,7 @@ Prompt:
 1. Inspect and take inspiration from the Jupyter notebooks in @braina/examples
 2. Generate code and write a standard Markdown (.md) file with clear code blocks of the following problems 3 and 4. 
 3. Auto-regressive model
-Simulate a simple autoregressive model composed of a source signal X and a target signal Y (pairwise AR model). Generate a Jupyter notebook with 
+Simulate a simple autoregressive model composed of a source signal X and a target signal Y (pairwise AR model). 
         a. The signals must oscillated at 40Hz 
         b. Generate 100 trials with a single stimulus and plot the single trial data and causal coupling over time. Plot the time series using the plot() function 
         c. Generate 100 trials with a three stimuli and plot the single trial data and causal coupling over time
