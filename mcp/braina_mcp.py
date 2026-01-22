@@ -7,7 +7,8 @@
 #   "xarray",
 #   "pandas",
 #   "netcdf4",
-#   "h5netcdf"
+#   "h5netcdf",
+#   "PyMuPDF"   # added for PDF reading
 # ]
 # ///
 
@@ -21,6 +22,7 @@ import frites.workflow
 import frites.stats
 import frites.dataset
 import hoi.metrics
+import fitz  # PyMuPDF
 
 # Initialize FastMCP server
 mcp = FastMCP("braina_mcp")
@@ -54,6 +56,37 @@ def save_data(data, path: str):
     else:
         raise ValueError(f"Unsupported export format for {path}. Use .npy or .nc")
     return path
+
+# --- MCP Tool: PDF Reader ---
+
+@mcp.tool()
+def read_pdf(path: str) -> str:
+    """
+    Read a PDF file and return its text content.
+
+    Parameters
+    ----------
+    path : str
+        Path to a PDF file (absolute or relative to the MCP working directory).
+
+    Returns
+    -------
+    str
+        Text content of the PDF or error message.
+    """
+    if not os.path.exists(path):
+        return f"Error: File not found: {path}"
+    try:
+        doc = fitz.open(path)
+        text = ""
+        for page in doc:
+            text += page.get_text()
+        doc.close()
+        return text if text else f"No text found in {path}"
+    except Exception as e:
+        return f"Error reading PDF {path}: {str(e)}"
+
+# ---MCP Tool for I/O ---
 
 @mcp.tool()
 def inspect_data(path: str) -> str:
