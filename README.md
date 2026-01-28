@@ -8,27 +8,62 @@ This project is dedicated to the development of an AI agent for the analysis of 
 
 ## Getting Started
 
-To create the expert AI agent, you will need to have the `gemini-cli` installed with Model Context Protocol (MCP) servers.
+To set up the Braina AI agent, you need to install the `gemini-cli` and configure the Model Context Protocol (MCP) servers.
 
-### Installing gemini-cli
+### 1. Installing gemini-cli
 
-You can find the latest installation instructions for `gemini-cli` in the official documentation:
+The `gemini-cli` can be installed via npm. Ensure you have Node.js installed, then run:
 
-*   [https://github.com/google/gemini-cli](https://github.com/google-gemini/gemini-cli)
+```bash
+npm install -g @google/gemini-cli
+```
 
-## Gemini CLI and AI Agent Setup
+For the latest installation instructions, visit the [official documentation](https://github.com/google-gemini/gemini-cli).
 
-This project can be extended to include AI agents that leverage large language models (LLMs), such as Gemini. To enable these agents, you need to configure the Gemini CLI's Model Context Protocol (MCP) server.
+### 2. Creating the `settings.json` File
 
-The core of this configuration involves:
+The Gemini CLI requires a `settings.json` file to manage credentials and MCP servers. This file should be placed in your Gemini CLI configuration directory (typically `~/.config/gemini-cli/settings.json`).
 
-1.  **Installing the Gemini CLI:** Ensure you have the `gemini-cli` installed as per the instructions in the "Getting Started" section.
-2.  **Setting up MPC Tools:** Refer to the `gemini-cli-setup.md` file for detailed instructions on how to configure essential MPC tools like the GitHub MCP Tool and the Python Executor Tool. These tools enable the Gemini agent to interact with various aspects of your project.
-3.  **Configuring `settings.json`:** A `settings.json` file is used to store sensitive information and custom paths, such as your GitHub Personal Access Token (PAT) and the path to your Python interpreter. Instructions for creating and configuring this file are also provided in `gemini-cli-setup.md`.
-4.  **Braina MCP Server:** This project includes a custom MCP server (`braina/mcp/braina_mcp.py`) that exposes the core functionality of `frites` and `hoi` to the AI agent.
-5.  **Suggested gemini-cli Extensions:** Suggested extension of gemini-cli is the Prompt Library, which contains professionally crafted prompts for common development tasks. 
+Create the file with the following structure:
 
-By properly setting up these components, you can empower AI agents within this project to assist with tasks, code generation, analysis, and more, leveraging the capabilities of the Gemini large language models.
+```json
+{
+  "mcpServers": {
+    "braina": {
+      "command": "uv",
+      "args": ["run", "/path/to/braina/mcp/braina_mcp.py"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_PAT"
+      }
+    },
+    "python-executor": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-everything"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  }
+}
+```
+
+#### Key Configurations:
+
+*   **Braina MCP Server:** This custom server (`braina/mcp/braina_mcp.py`) exposes the core functionality of `frites` and `hoi` directly to the agent. **Replace `/path/to/braina/` with the absolute path to this project repository.**
+*   **GitHub MCP Tool:** Enables the agent to read source code and documentation directly from GitHub. Replace `YOUR_GITHUB_PAT` with your [GitHub Personal Access Token](https://github.com/settings/tokens).
+*   **Python Executor Tool:** Provides a secure environment for the agent to execute and verify Python code locally.
+*   **Context7 MCP Server:** Used to fetch up-to-date documentation for various libraries.
+
+For more detailed information on each tool and server, refer to [gemini-cli-setup.md](gemini-cli-setup.md).
+
+### 3. Suggested gemini-cli Extensions
+
+A recommended extension for the Gemini CLI is the **Prompt Library**, which contains professionally crafted prompts for common development and analysis tasks.
 
 ## Project Structure
 
