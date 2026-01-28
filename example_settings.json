@@ -26,8 +26,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/home/INT/brovelli.a/code"
+        "@modelcontextprotocol/server-filesystem"
       ]
     },
     "github": {
