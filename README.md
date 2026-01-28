@@ -22,7 +22,7 @@ For the latest installation instructions, visit the [official documentation](htt
 
 ### 2. Creating the `settings.json` File
 
-The Gemini CLI requires a `settings.json` file to manage credentials and MCP servers. This file should be placed in your Gemini CLI configuration directory (typically `~/.config/gemini-cli/settings.json`).
+The Gemini CLI requires a `settings.json` file to manage credentials and MCP servers. This file should be placed in your Gemini CLI configuration directory (typically  `~/.config/gemini-cli/settings.json` or `~/.gemini/settings.json`).
 
 Create the file with the following structure:
 
