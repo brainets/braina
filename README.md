@@ -4,7 +4,7 @@
 
 # Braina: AI agent for Brain Interaction Analysis
 
-Braina is a framework that turns AI coding agents into experts in computational neuroscience. It provides an MCP server, curated examples, tutorials, and research papers so that AI agents (Gemini CLI or Claude Code) can analyze complex neural interactions using information-theoretical measures.
+Braina is a framework that turns AI coding agents into experts in computational neuroscience. It provides an MCP server, curated examples, tutorials, and research papers so that AI agents (Gemini CLI, Claude Code, or OpenAI Codex CLI) can analyze complex neural interactions using information-theoretical measures.
 
 Built by the [BraiNets](https://github.com/brainets) team at the [Institut de Neurosciences de la Timone](https://www.int.univ-amu.fr/), Marseille, France.
 
@@ -23,7 +23,7 @@ These tools operate on electrophysiological data: fMRI, MEG, EEG, LFP, and MUA m
 
 - **Python 3.10+**
 - **[uv](https://docs.astral.sh/uv/)** — used for dependency management. All scripts use PEP 723 inline metadata, so no virtualenv setup is needed.
-- **Node.js** (for Gemini CLI and npx-based MCP servers)
+- **Node.js** (for Gemini CLI, Codex CLI, and npx-based MCP servers)
 
 Install uv if you don't have it:
 
@@ -47,7 +47,7 @@ uv run mcp/verify_libs.py  # Run the test suite for Frites + HOI functions
 
 ## Setting up an AI Agent
 
-Braina supports two AI coding agents. You can use either or both.
+Braina supports three AI coding agents. You can use any combination.
 
 ### Option A: Gemini CLI
 
@@ -117,6 +117,36 @@ The agent reads `CLAUDE.md` for project context. Claude Code can also call Frite
 claude
 ```
 
+### Option C: OpenAI Codex CLI
+
+1. Install Codex CLI:
+
+```bash
+npm i -g @openai/codex
+```
+
+2. Register the Braina MCP server (run from the repo directory):
+
+```bash
+codex mcp add braina -- uv run mcp/braina_mcp.py
+```
+
+Or manually add to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.braina]
+command = "uv"
+args = ["run", "mcp/braina_mcp.py"]
+```
+
+The agent reads `AGENTS.md` for project context.
+
+3. Launch from the repo directory:
+
+```bash
+codex
+```
+
 ## Project Structure
 
 ```
@@ -147,6 +177,7 @@ braina/
 ├── papers/                # Research papers (theoretical foundation)
 ├── GEMINI.md              # Project context for Gemini CLI
 ├── CLAUDE.md              # Project context for Claude Code
+├── AGENTS.md              # Project context for OpenAI Codex CLI
 ├── check_env.py           # Environment verification
 └── gemini-cli-setup.md    # Detailed MCP server setup guide
 ```
