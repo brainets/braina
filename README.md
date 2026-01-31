@@ -2,7 +2,7 @@
   <img src="docs/braina_logo.png" alt="Braina logo" width="400"/>
 </p>
 
-# AI agent for Brain Interaction Analysis (Braina)
+# Braina: AI agent for Brain Interaction Analysis
 
 Braina is a framework that turns AI coding agents into experts in computational neuroscience. It provides an MCP server, curated examples, tutorials, and research papers so that AI agents (Gemini CLI or Claude Code) can analyze complex neural interactions using information-theoretical measures.
 
