@@ -6,7 +6,7 @@
 
 Braina is a framework that turns AI coding agents into experts in computational neuroscience. It provides an MCP server, curated examples, tutorials, and research papers so that AI agents (Gemini CLI or Claude Code) can analyze complex neural interactions using information-theoretical measures.
 
-Built at the [Institut de Neurosciences de la Timone](https://www.int.univ-amu.fr/) (BraiNets team), Marseille, France.
+Built by the [BraiNets] (https://github.com/brainets) team at the [Institut de Neurosciences de la Timone](https://www.int.univ-amu.fr/), Marseille, France.
 
 ## Core Toolboxes
 
@@ -14,7 +14,6 @@ Braina integrates three Python libraries for brain interaction analysis:
 
 - **[Frites](https://github.com/brainets/frites)** — Single-trial functional connectivity and information-theoretical analysis (Granger causality, transfer entropy, PID, DFC, mutual information workflows).
 - **[HOI](https://github.com/brainets/hoi)** — Higher-Order Interactions using JAX (O-information, synergy, redundancy, RSI, DTC, InfoTopo).
-- **[XGI](https://github.com/xgi-org/xgi)** — Hypergraph and higher-order network structures.
 
 These tools operate on electrophysiological data: fMRI, MEG, EEG, LFP, and MUA multivariate time series.
 
