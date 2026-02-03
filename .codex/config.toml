@@ -1,0 +1,9 @@
+# Codex CLI configuration for Braina
+# MCP server providing 30+ neuroscience analysis tools (Frites + HOI)
+
+[mcp_servers.braina]
+command = "uv"
+args = ["run", "mcp/braina_mcp.py"]
+enabled = true
+startup_timeout_sec = 30
+tool_timeout_sec = 120
