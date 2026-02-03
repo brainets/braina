@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "braina": {
+      "type": "local",
+      "command": ["uv", "run", "mcp/braina_mcp.py"],
+      "enabled": true
+    }
+  },
+  "instructions": ["AGENTS.md"]
+}
