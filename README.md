@@ -131,7 +131,7 @@ braina/
 │   ├── brainhack_26/      # BrainHack 2026 challenges
 │   ├── hoi/               # HOI redundancy/synergy detection
 │   ├── granger/           # Granger Causality analysis
-│   └── master_td/         # Master's thesis directed topics
+│   └── master_td/         # Master's travaux dirigée
 ├── papers/                # Research papers (theoretical foundation)
 │
 │ # Agent instruction files
