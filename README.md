@@ -4,7 +4,7 @@
 
 # Braina: AI agent for Brain Interaction Analysis
 
-Braina is a framework that turns AI coding agents into experts in computational neuroscience. It provides an MCP server, curated examples, tutorials, and research papers so that AI agents (Claude Code, Gemini CLI, OpenAI Codex CLI, or OpenCode) can analyze complex neural interactions using information-theoretical measures.
+Braina is a framework that turns AI coding agents into experts in Brain Interaction Analysis from high-dimensional brain data. It provides an MCP server, curated examples, tutorials, and research papers so that AI agents (Claude Code, Gemini CLI, OpenAI Codex CLI, or OpenCode) can analyze complex neural interactions using information-theoretical measures.
 
 Built by the [BraiNets](https://github.com/brainets) team at the [Institut de Neurosciences de la Timone](https://www.int.univ-amu.fr/), Marseille, France.
 
