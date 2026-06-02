@@ -21,8 +21,8 @@ uv run mcp/verify_libs.py
 uv run mcp/braina_mcp.py
 
 # Run any example script (all use uv inline dependencies)
-uv run examples/frites/conn/ex_conn_covgc.py
-uv run examples/hoi/metrics/ex_oinfo.py
+uv run examples/frites/conn/plot_covgc.py
+uv run examples/hoi/metrics/plot_oinfo.py
 ```
 
 All scripts use `uv` with PEP 723 inline script metadata (`# /// script` blocks) for dependency management — no virtualenv setup needed.
@@ -33,8 +33,10 @@ All scripts use `uv` with PEP 723 inline script metadata (`# /// script` blocks)
 
 The central integration layer. A FastMCP server exposing 30+ tools that wrap Frites and HOI library functions with standardized file-based I/O. Each tool takes file paths as input (`.npy` or `.nc`), calls the underlying library function, and saves results. This is registered as a Claude Code MCP server (`braina`).
 
+`load_data`/`save_data` are internal I/O helpers (not exposed as MCP tools) that handle the `.npy` vs `.nc` dispatch for every tool.
+
 Tool categories:
-- **Data I/O**: `inspect_data`, `read_pdf`, `load_data`, `save_data`
+- **Data I/O**: `inspect_data`, `read_pdf`
 - **Frites connectivity**: `frites_conn_covgc`, `frites_conn_dfc`, `frites_conn_pid`, `frites_conn_ii`, `frites_conn_te`, `frites_conn_fit`, `frites_conn_spec`, `frites_conn_ccf`
 - **Frites workflows**: `frites_wf_stats` (WfStats), `frites_wf_mi` (WfMi), `frites_wf_conn_comod` (WfConnComod)
 - **Frites simulation**: `frites_sim_ar` (StimSpecAR)
@@ -61,3 +63,4 @@ Tool categories:
 - When writing analysis scripts, test with small dummy data first (see `mcp/verify_libs.py` for patterns).
 - Prefer JAX for high-performance math in HOI contexts; use xarray/MNE structures for Frites connectivity.
 - Numpy must be `<2.0` (required by current Frites/HOI versions).
+- The same `braina` MCP server is shared across four agents via parallel instruction/config files: `CLAUDE.md` (Claude Code), `GEMINI.md` + `.gemini/settings.json` (Gemini CLI), and `AGENTS.md` + `.codex/config.toml` + `opencode.json` (Codex CLI & OpenCode). When project guidance or the tool list changes, the sibling files likely need the same update.
