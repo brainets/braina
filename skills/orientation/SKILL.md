@@ -159,8 +159,11 @@ This step is the same regardless of whether the effect came from Frites
 or HOI. Two situations:
 
 - **Already using `frites_wf_mi` or `frites_wf_conn_comod`** — statistics
-  are built in. Only `inference` and `n_perm` need to be chosen (see
-  below); there's no separate stats call to make.
+  are built in, so there's no separate stats call to make. `inference`
+  and `n_perm` are exposed and worth choosing deliberately (see below);
+  the multiple-comparisons method (4b) is **not** exposed by either
+  wrapper and is always `'cluster'` — see `frites-workflows` if a
+  different correction is genuinely needed for one of these two tools.
 - **Using any other tool** (`frites_conn_*`, any `hoi_*`) — these return a
   raw effect with no p-values. Build a null distribution (e.g. shuffle
   trial labels / circularly shift time series / recompute the same metric
