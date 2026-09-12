@@ -1,6 +1,6 @@
 # /// script
 # dependencies = [
-#   "mcp",
+#   "mcp<2",   # mcp 2.x renamed FastMCP to MCPServer and moved the import path
 #   "frites",
 #   "hoi",
 #   "numpy<2.0",
