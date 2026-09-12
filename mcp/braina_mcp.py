@@ -355,7 +355,7 @@ def frites_conn_spec(data_path: str, output_path: str, freqs: list[float], metri
     return f"Spectral connectivity ({metric}) saved to {output_path}"
 
 @mcp.tool()
-def frites_conn_ccf(data_path: str, output_path: str, max_delay: int = 30) -> str:
+def frites_conn_ccf(data_path: str, output_path: str) -> str:
     """
     Single trial Cross-Correlation Function.
 
@@ -365,13 +365,11 @@ def frites_conn_ccf(data_path: str, output_path: str, max_delay: int = 30) -> st
         Path to input data.
     output_path : str
         Path to save output. Use .nc extension to preserve metadata (ROI names, times).
-    max_delay : int
-        Note: Standard conn_ccf computes full lags. If cropping is needed, handle post-hoc.
     """
     data = load_data(data_path)
-    
+
     ccf = frites.conn.conn_ccf(data, n_jobs=1)
-    
+
     save_data(ccf, output_path)
     return f"CCF saved to {output_path}"
 
