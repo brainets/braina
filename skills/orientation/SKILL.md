@@ -31,9 +31,11 @@ sanity-checked before touching real data.
   the group's structure, not any single pair) → HOI, go to Step 3.
 - **Not sure yet / exploratory** → recommend starting pairwise with Frites
   to build intuition on a couple of region pairs, or, if there are many
-  regions and no clear pair in mind, use `hoi_get_nbest_mult` first to
-  search for which subsets of regions look most informative before
-  committing to a deeper analysis.
+  regions and no clear pair in mind, run `hoi_oinfo` (or `hoi_infotopo`)
+  across all regions first and inspect the raw output for the largest
+  magnitudes before committing to a deeper analysis — `hoi_get_nbest_mult`
+  would normally be the tool for this, but see its warning in Step 3d
+  before reaching for it.
 
 ## Step 2 — Frites: pairwise questions
 
@@ -122,6 +124,9 @@ how to test it for significance across subjects/trials.
    individually (O-info alone only gives their difference).
 2. **`hoi_rsi`** — redundancy-synergy index. A single normalized balance
    score if a simpler summary than two raw quantities is preferred.
+   *Warning:* its sign convention is the **opposite** of `oinfo` —
+   positive means synergy here, not redundancy. See the sign-convention
+   table in the `hoi-metrics` skill before reporting a direction.
 
 ### 3c. "I want the full picture across all interaction orders, not just one order"
 
@@ -132,10 +137,11 @@ how to test it for significance across subjects/trials.
 
 ### 3d. "Which subset of regions is worth analyzing at all?"
 
-1. **`hoi_get_nbest_mult`** — searches for the most informative multiplets
-   from a HOI metric's output. Use this *before* committing to a deep
-   analysis on a large set of regions, to prioritize which subsets to
-   examine with the tools above.
+1. **`hoi_get_nbest_mult`** — intended to search for the most informative
+   multiplets from a HOI metric's output. *Warning:* the braina version of
+   this tool currently returns only flat array indices and values, not
+   the actual region combinations — see the `hoi-metrics` skill before
+   relying on it to identify *which* regions to examine further.
 
 ### 3e. "I want one number for how much the whole group shares in common"
 
