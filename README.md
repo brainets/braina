@@ -4,7 +4,7 @@
 
 # Braina: AI agent for Brain Interaction Analysis
 
-Braina is a framework that turns AI coding agents into experts in Brain Interaction Analysis from high-dimensional brain data. It provides curated examples, tutorials, research papers and a Model Contect Protocol (MCP) server. Braina can provide and test codes to analyze complex neural interactions using information-theoretical measures and two Python packages developed by the [BraiNets](https://github.com/brainets) team at the [Institut de Neurosciences de la Timone](https://www.int.univ-amu.fr/) (Frites and HOI). Braina works with different AI agents Command Line Interface (CLI) platforms, such as Claude Code, Gemini CLI, OpenAI Codex CLI and OpenCode. 
+Braina is a framework that turns Claude Code into an expert in Brain Interaction Analysis from high-dimensional brain data. It provides curated examples, tutorials, research papers and a Model Context Protocol (MCP) server. Braina can provide and test codes to analyze complex neural interactions using information-theoretical measures and two Python packages developed by the [BraiNets](https://github.com/brainets) team at the [Institut de Neurosciences de la Timone](https://www.int.univ-amu.fr/) (Frites and HOI).
 
 ## Core Toolboxes
 
@@ -43,11 +43,7 @@ uv run check_env.py        # Check core dependencies (frites, hoi, xgi, numpy, x
 uv run mcp/verify_libs.py  # Run the test suite for Frites + HOI functions
 ```
 
-## Setting up an AI Agent
-
-Braina includes **project-level configuration files** for all four supported AI coding agents. After cloning, simply install your preferred CLI and launch it from the `braina/` directory.
-
-### Option A: Claude Code
+## Setting up Claude Code
 
 ```bash
 # Install
@@ -61,47 +57,6 @@ claude
 ```
 
 Reads `CLAUDE.md` for project context.
-
-### Option B: Gemini CLI
-
-```bash
-# Install
-npm install -g @google/gemini-cli
-
-# Launch (from braina directory) — MCP config is in .gemini/settings.json
-gemini
-```
-
-Reads `GEMINI.md` for project context. The project includes `.gemini/settings.json` with the braina MCP server pre-configured.
-
-### Option C: OpenAI Codex CLI
-
-```bash
-# Install
-npm install -g @openai/codex
-
-# Launch (from braina directory) — MCP config is in .codex/config.toml
-codex
-```
-
-Reads `AGENTS.md` for project context. The project includes `.codex/config.toml` with the braina MCP server pre-configured.
-
-### Option D: OpenCode
-
-```bash
-# Install
-curl -fsSL https://opencode.ai/install | bash
-# Or: npm install -g opencode-ai
-
-# Launch (from braina directory) — MCP config is in opencode.json
-opencode
-```
-
-Reads `AGENTS.md` for project context. The project includes `opencode.json` with the braina MCP server pre-configured.
-
-### Adding optional MCP servers (Gemini CLI)
-
-For Gemini CLI, you can add additional MCP servers (GitHub, Context7) to your global config at `~/.gemini/settings.json`. See [gemini-cli-setup.md](gemini-cli-setup.md) for details.
 
 ## Project Structure
 
@@ -132,22 +87,11 @@ braina/
 │   └── master_td/         # Master's travaux dirigée
 ├── papers/                # Research papers (theoretical foundation)
 │
-│ # Agent instruction files
 ├── CLAUDE.md              # Project context for Claude Code
-├── GEMINI.md              # Project context for Gemini CLI
-├── AGENTS.md              # Project context for Codex CLI & OpenCode
-│
-│ # Agent MCP configurations (project-level)
-├── opencode.json          # OpenCode MCP config
-├── .codex/
-│   └── config.toml        # Codex CLI MCP config
-├── .gemini/
-│   └── settings.json      # Gemini CLI MCP config
 ├── .claude/
 │   └── settings.local.json  # Claude Code permissions
 │
-├── check_env.py           # Environment verification
-└── gemini-cli-setup.md    # Detailed MCP server setup guide
+└── check_env.py           # Environment verification
 ```
 
 ### MCP Server (`mcp/braina_mcp.py`)

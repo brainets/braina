@@ -63,4 +63,3 @@ Tool categories:
 - When writing analysis scripts, test with small dummy data first (see `mcp/verify_libs.py` for patterns).
 - Prefer JAX for high-performance math in HOI contexts; use xarray/MNE structures for Frites connectivity.
 - Numpy must be `<2.0` (required by current Frites/HOI versions).
-- The same `braina` MCP server is shared across four agents via parallel instruction/config files: `CLAUDE.md` (Claude Code), `GEMINI.md` + `.gemini/settings.json` (Gemini CLI), and `AGENTS.md` + `.codex/config.toml` + `opencode.json` (Codex CLI & OpenCode). When project guidance or the tool list changes, the sibling files likely need the same update.

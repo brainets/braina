@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "braina": {
-      "command": "uv",
-      "args": ["run", "mcp/braina_mcp.py"],
-      "env": {}
-    }
-  }
-}
