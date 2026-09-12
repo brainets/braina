@@ -26,6 +26,38 @@ nonlinearities after rank-normalization, but still assuming the
 dependency structure is well described by a Gaussian copula, not fully
 nonparametric.
 
+## Compute backend: HOI runs on CPU by default in this repo
+
+HOI is built on JAX, which can run on CPU or GPU — but **braina's own
+dependency declarations don't ask for GPU support**. Both
+`check_env.py` and `mcp/braina_mcp.py` pin plain `"jax"`/`"jaxlib"` with
+no CUDA extra, and that's what `uv run` installs. Plain `jax`/`jaxlib`
+from PyPI are CPU-only wheels, so every `hoi_*` tool runs on CPU today
+regardless of what hardware is available — this isn't a JAX limitation,
+it's simply not requested by braina's dependency list.
+
+- **Check what's actually active**: `python -c "import jax;
+  print(jax.devices())"`. `[CpuDevice(id=0)]` means CPU; a `Gpu`/`Cuda`
+  device listed means GPU is active.
+- **To actually use a GPU**, the inline PEP 723 dependency block needs
+  the CUDA extra matching the machine's CUDA version, e.g.
+  `"jax[cuda12]"` instead of plain `"jax"` — see
+  https://jax.readthedocs.io/en/latest/installation.html for the exact
+  extra to use (it depends on the local CUDA version, so don't guess a
+  version without checking the machine first). HOI's own install docs
+  point to the same JAX page rather than giving GPU-specific commands:
+  https://brainets.github.io/hoi/install.html.
+- **When it matters**: GPU acceleration helps most on large problems —
+  many features and/or a large `maxsize` (the combinatorial explosion in
+  multiplet count is where JAX's vectorization pays off). For a handful
+  of ROIs with `maxsize` capped low, CPU is often fast enough that
+  switching isn't worth the setup effort.
+- **If running on a shared cluster**: JAX/XLA preallocates most of a
+  GPU's memory by default on first use, which can starve other jobs on
+  the same GPU. Set `XLA_PYTHON_CLIENT_PREALLOCATE=false` (or
+  `XLA_PYTHON_CLIENT_MEM_FRACTION` to cap it) before running if sharing
+  a GPU with other processes.
+
 ## ⚠️ Sign conventions are not consistent across metrics
 
 This is the single most common source of misinterpretation. **Check which
