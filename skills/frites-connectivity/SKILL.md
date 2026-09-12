@@ -61,6 +61,7 @@ Returns `(n_epochs, n_pairs, n_windows, 3)`: index `0` = X→Y, `1` = Y→X,
 Reference: Brovelli et al. 2015 (`papers/Brovelli_jneurosci_2015_...`).
 Not exposed by the MCP wrapper: `norm` (normalized GC), `gcrn`, `n_jobs`
 (hardcoded to 1 — no parallelism across pairs via this tool).
+API reference: https://brainets.github.io/frites/api/generated/frites.conn.conn_covgc.html
 
 ## `frites_conn_dfc` — dynamic functional connectivity
 
@@ -75,6 +76,7 @@ Undirected, time-resolved coupling between ROI pairs, by default via GCMI
   computing every channel-pair separately.
 
 Not exposed: `estimator` (always defaults to GCMI through this tool).
+API reference: https://brainets.github.io/frites/api/generated/frites.conn.conn_dfc.html
 
 ## `frites_conn_pid` — partial information decomposition
 
@@ -89,6 +91,7 @@ contribution, **redundant** information (both carry the same info), and
 
 Reference: Williams & Beer 2010. Not exposed: `gcrn` (library default
 `True`), `dt` (library default `1`).
+API reference: https://brainets.github.io/frites/api/generated/frites.conn.conn_pid.html
 
 ## `frites_conn_ii` — interaction information
 
@@ -100,6 +103,7 @@ full four-way breakdown.
 - `mi_type`, `dt` — same meaning as in `pid`.
 
 Reference: McGill 1954.
+API reference: https://brainets.github.io/frites/api/generated/frites.conn.conn_ii.html
 
 ## `frites_conn_te` — transfer entropy
 
@@ -116,6 +120,7 @@ a fully nonparametric (e.g. binning/kNN-based) TE estimate.
 
 Not exposed: `sfreq` (only meaningful with `return_delays`, not used
 here), `gcrn` (library default `True`).
+API reference: https://brainets.github.io/frites/api/generated/frites.conn.conn_te.html
 
 ## `frites_conn_fit` — feature-specific information transfer
 
@@ -131,6 +136,7 @@ Same GCMI/copula estimator core.
   reverse-direction contribution).
 
 Reference: Celotto et al. 2023 (`papers/Celotto_neurips_2023_...`).
+API reference: https://brainets.github.io/frites/api/generated/frites.conn.conn_fit.html
 
 ## `frites_conn_spec` — spectral connectivity
 
@@ -148,6 +154,7 @@ per-frequency, per-time coupling metric. No information theory involved.
 Needs a sampling frequency: pass `.nc` input with `attrs['sfreq']` set —
 `.npy` input has no `sfreq` metadata and the underlying decomposition will
 fail without it.
+API reference: https://brainets.github.io/frites/api/generated/frites.conn.conn_spec.html
 
 ## `frites_conn_ccf` — cross-correlation function
 
@@ -161,6 +168,7 @@ matters, crop the output afterward).
 Interpretation: peak at a **negative** lag means the target should be
 shifted *toward* the source (source leads); peak at a **positive** lag
 means the target leads.
+API reference: https://brainets.github.io/frites/api/generated/frites.conn.conn_ccf.html
 
 ## Examples
 

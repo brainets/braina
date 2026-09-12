@@ -249,3 +249,12 @@ rather than presenting an improvised call with unwarranted confidence.
 Once the user picks a tool, switch to the matching topic skill for
 parameter details and worked examples:
 `frites-connectivity`, `frites-workflows`, or `hoi-metrics`.
+
+## Further reading
+
+For theoretical background beyond what this skill or the topic skills
+cover — full derivations, glossaries, the broader design philosophy of
+each toolbox:
+
+- Frites: https://brainets.github.io/frites/overview/index.html
+- HOI: https://brainets.github.io/hoi/
