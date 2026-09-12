@@ -48,15 +48,44 @@ uv run mcp/verify_libs.py  # Run the test suite for Frites + HOI functions
 ```bash
 # Install
 npm install -g @anthropic-ai/claude-code
+```
+
+### Option A: Install as a plugin (recommended)
+
+Works from any directory, not just a clone of this repo:
+
+```bash
+claude plugin marketplace add brainets/braina
+claude plugin install braina@braina-plugins
+```
+
+This registers the MCP server and the 4 braina skills (`orientation`,
+`frites-connectivity`, `hoi-metrics`, `workflows`) globally.
+
+### Option B: Clone and run directly
+
+```bash
+git clone https://github.com/brainets/braina.git
+cd braina
 
 # Register the MCP server (one-time setup)
 claude mcp add braina -- uv run mcp/braina_mcp.py
 
-# Launch (from braina directory)
 claude
 ```
 
-Reads `CLAUDE.md` for project context.
+`.mcp.json` at the project root is used for the plugin packaging (it
+references `${CLAUDE_PLUGIN_ROOT}`, which only resolves inside a plugin
+install) — it does **not** auto-register the server for a plain clone, so
+the manual `claude mcp add` step above is still required here. This means
+`claude mcp list` will show a harmless warning about `braina` being
+defined in both `project` scope (from `.mcp.json`, left unresolved
+outside a plugin install) and `local` scope (from the command above) —
+the local one is what actually connects, and the warning can be ignored.
+**Don't run `claude mcp remove braina -s project`** to silence it — that
+rewrites the committed `.mcp.json` itself (emptying it), not just local
+config. Reads `CLAUDE.md` for project context. Use this option if
+actively developing on braina itself.
 
 ## Project Structure
 
