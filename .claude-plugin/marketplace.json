@@ -1,0 +1,12 @@
+{
+  "name": "braina-plugins",
+  "owner": {
+    "name": "BraiNets - Institut de Neurosciences de la Timone"
+  },
+  "plugins": [
+    {
+      "name": "braina",
+      "source": "."
+    }
+  ]
+}
