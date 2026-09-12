@@ -9,7 +9,7 @@ This skill is a decision aid, not a reference manual. Its job is to turn a
 plain-language question into a **ranked shortlist of candidate MCP tools**,
 each with a one-line reason and a one-line tradeoff — never a single
 forced answer. Once the user picks a direction, hand off to the relevant
-topic skill (`frites-connectivity`, `frites-workflows`, `hoi-metrics`) for
+topic skill (`frites-connectivity`, `workflows`, `hoi-metrics`) for
 parameter-level detail.
 
 If the data hasn't been inspected yet, run `inspect_data` first — the
@@ -162,7 +162,7 @@ or HOI. Two situations:
   are built in, so there's no separate stats call to make. `inference`
   and `n_perm` are exposed and worth choosing deliberately (see below);
   the multiple-comparisons method (4b) is **not** exposed by either
-  wrapper and is always `'cluster'` — see `frites-workflows` if a
+  wrapper and is always `'cluster'` — see `workflows` if a
   different correction is genuinely needed for one of these two tools.
 - **Using any other tool** (`frites_conn_*`, any `hoi_*`) — these return a
   raw effect with no p-values. Build a null distribution (e.g. shuffle
@@ -257,7 +257,7 @@ rather than presenting an improvised call with unwarranted confidence.
 
 Once the user picks a tool, switch to the matching topic skill for
 parameter details and worked examples:
-`frites-connectivity`, `frites-workflows`, or `hoi-metrics`.
+`frites-connectivity`, `workflows`, or `hoi-metrics`.
 
 ## Further reading
 

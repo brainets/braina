@@ -1,14 +1,24 @@
 ---
-description: Use once a Frites workflow tool has been chosen (frites_wf_stats, frites_wf_mi, frites_wf_conn_comod) or the question is about how permutation testing, cluster correction, or fixed/random-effect inference actually works under the hood. Grounded in the real Frites source (frites/workflow, frites/stats), not just the MCP wrapper docstrings. Not for choosing which tool to use in the first place — see the orientation skill for that.
-tags: [frites, statistics, permutation-testing, cluster-correction, workflows]
+description: Use once a statistical workflow tool has been chosen (frites_wf_stats, frites_wf_mi, frites_wf_conn_comod) or the question is about how permutation testing, cluster correction, bootstrapping, or fixed/random-effect inference actually works under the hood — for either Frites connectivity or HOI metrics. Grounded in the real Frites and HOI source (frites/workflow, frites/stats, hoi/utils), not just the MCP wrapper docstrings. Not for choosing which tool to use in the first place — see the orientation skill for that.
+tags: [frites, hoi, statistics, permutation-testing, cluster-correction, bootstrapping, workflows]
 ---
 
-# Frites workflows and statistics
+# Statistical workflows for Frites and HOI
 
-Covers the 3 workflow tools braina exposes — `frites_wf_stats`,
+Covers the 3 Frites workflow tools braina exposes — `frites_wf_stats`,
 `frites_wf_mi`, `frites_wf_conn_comod` — plus `WfMiCombine`, a fourth
 workflow that exists in Frites (`frites/workflow/wf_mi_combine.py`) but
-**is not currently wrapped by any MCP tool**.
+**is not currently wrapped by any MCP tool**. It also covers how the same
+statistical machinery applies to HOI output, and HOI's own idiomatic
+alternative (bootstrap confidence intervals).
+
+**Neither toolbox's `hoi_*` tools compute significance on their own** —
+same situation as the bare `frites_conn_*` tools. `frites_wf_stats` is a
+generic non-parametric engine: it doesn't know or care whether the
+`effect`/`perms` arrays it's given came from Frites or HOI, only that
+their shapes match its (n_roi-like-axis, n_subjects, ..., n_times)
+convention. That's what makes it reusable across both toolboxes — see
+"Applying this to HOI output" below.
 
 ## How the permutation test actually works
 
@@ -120,10 +130,61 @@ this would need direct Frites scripting outside braina today.
 
 API reference: https://brainets.github.io/frites/api/generated/frites.workflow.WfMiCombine.html
 
+## Applying this to HOI output
+
+`frites_wf_stats`'s `_prepare_stats_input` step splits a 3D/4D array on
+its first non-permutation axis and treats each slice as one independent
+test — that's literally "one test per ROI" for Frites, but the same
+mechanism works for "one test per multiplet" for HOI: an `hoi_*` tool's
+`(n_mult, n_variables)` output plays the same structural role as Frites'
+`(n_roi, n_subjects, n_times)`, with `n_mult` standing in for `n_roi`.
+
+To actually get a p-value on an `hoi_*` result:
+
+1. **Build the null yourself** — braina's `hoi_*` wrappers don't do this
+   automatically, unlike `frites_wf_mi`/`frites_wf_conn_comod`. The
+   right shuffle depends on the metric:
+   - Metrics that take a `y` (`redundancy_mmi`, `synergy_mmi`, `rsi`,
+     `gradient_oinfo`) — shuffle `y` and rerun the same `hoi_*` call,
+     `n_perm` times. Directly analogous to `permute_mi_vector` in Frites.
+   - Metrics without `y` (`oinfo`, `infotopo`, `dtc`) — shuffle one
+     feature's sample order (breaking its higher-order dependency with
+     the rest) and rerun, `n_perm` times.
+2. **Stack the results** into `(n_perm, n_mult, ...)` and feed alongside
+   the real (unshuffled) `(n_mult, ...)` effect into `frites_wf_stats`.
+3. **Pick `inference` deliberately.** If there's genuinely one HOI
+   estimate per subject in the `n_variables` axis, `rfx` is appropriate,
+   exactly as with Frites. If there's only a single dataset/subject
+   (the common case for an HOI analysis), there's no population to
+   generalize to — use `ffx` rather than defaulting to `rfx` out of habit.
+
+## HOI's own approach: bootstrap confidence intervals
+
+HOI's own examples (`examples/hoi/statistics/plot_bootstrapping.py`)
+don't use permutation testing at all — they use **bootstrapping**:
+resample the samples *with replacement* (`sklearn.utils.resample`) and
+recompute the same HOI metric `n_boots` times via the real fit()
+signature's `samples` parameter (`model.fit(method="gc",
+samples=samples, minsize=3)`), then take the `[5, 95]%` percentile of the
+bootstrap distribution as a confidence interval around the estimate.
+
+This answers a **different question** than permutation testing: bootstrap
+CIs quantify *how uncertain the estimate itself is*; permutation p-values
+quantify *whether the estimate is different from chance*. They're
+complementary, not interchangeable — don't substitute one for the other.
+
+**Not exposed via any MCP tool**: `samples` exists on every HOI metric's
+real `fit()` but none of braina's `hoi_*` wrappers expose it, so
+bootstrapping currently requires scripting directly against HOI rather
+than going through braina's MCP tools.
+
 ## Examples
 
 See the `orientation` skill's Step 5 table for the validated example
-script per tool. `frites_wf_stats`'s `ffx`-vs-`rfx` comparison is
-specifically demonstrated in
+script per Frites workflow tool. `frites_wf_stats`'s `ffx`-vs-`rfx`
+comparison is specifically demonstrated in
 `examples/frites/statistics/plot_wf_mi_stats_compare_ffx.py` and
-`..._rfx.py`.
+`..._rfx.py`. For HOI's bootstrap approach, see
+`examples/hoi/statistics/plot_bootstrapping.py` — there is no example of
+permutation-testing HOI output via `frites_wf_stats` (the recipe above is
+not yet demonstrated anywhere in the repo).
