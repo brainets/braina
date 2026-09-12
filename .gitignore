@@ -1,0 +1,2 @@
+# Large SEEG dataset — fetched manually, see datasets/seeg/README.md
+tutorials/seeg_ebrains_frites/datasets/seeg/*.nc
