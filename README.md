@@ -1,72 +1,110 @@
 <p align="center">
-  <img src="docs/braina_logo.png" alt="Braina logo" width="400"/>
+  <img src="docs/braina_logo.png" alt="Braina logo" width="360"/>
 </p>
 
-# Braina: AI agent for Brain Interaction Analysis
+<h1 align="center">Braina</h1>
+<p align="center"><b>A Claude Code plugin for brain interaction analysis.</b></p>
 
-Braina is a framework that turns Claude Code into an expert in Brain Interaction Analysis from high-dimensional brain data. It provides curated examples, tutorials, research papers and a Model Context Protocol (MCP) server. Braina can provide and test codes to analyze complex neural interactions using information-theoretical measures and two Python packages developed by the [BraiNets](https://github.com/brainets) team at the [Institut de Neurosciences de la Timone](https://www.int.univ-amu.fr/) (Frites and HOI).
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-BSD--3--Clause-blue.svg" alt="License"></a>
+  <img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/Claude%20Code-plugin-8A63D2.svg" alt="Claude Code plugin">
+</p>
 
-## Core Toolboxes
+Braina turns [Claude Code](https://claude.com/claude-code) into a working
+partner for analyzing complex neural interactions in electrophysiological
+data (fMRI, MEG, EEG, LFP, MUA) — using information-theoretical measures
+from two toolboxes built by the [BraiNets](https://github.com/brainets) team
+at the Institut de Neurosciences de la Timone:
 
-Braina integrates three Python libraries for brain interaction analysis:
+- **[Frites](https://github.com/brainets/frites)** — single-trial functional
+  connectivity (Granger causality, transfer entropy, PID, dynamic FC,
+  mutual-information workflows).
+- **[HOI](https://github.com/brainets/hoi)** — higher-order interactions
+  (O-information, synergy, redundancy, RSI, DTC, InfoTopo), GPU-capable via
+  JAX.
 
-- **[Frites](https://github.com/brainets/frites)** — Single-trial functional connectivity and information-theoretical analysis (Granger causality, transfer entropy, PID, DFC, mutual information workflows).
-- **[HOI](https://github.com/brainets/hoi)** — Higher-Order Interactions using JAX (O-information, synergy, redundancy, RSI, DTC, InfoTopo).
+It ships as an MCP server (30+ tools wrapping Frites and HOI) plus 4 skills
+that know how to pick the right tool, explain what it actually computes, and
+run the statistics correctly — grounded in the real library source, not just
+tool docstrings.
 
-These tools operate on electrophysiological data: fMRI, MEG, EEG, LFP, and MUA multivariate time series.
-
-## Installation
-
-### Prerequisites
-
-- **Python 3.10+**
-- **[uv](https://docs.astral.sh/uv/)** — used for dependency management. All scripts use PEP 723 inline metadata, so no virtualenv setup is needed.
-- **Node.js** (for installing CLI agents via npm)
-
-Install uv if you don't have it:
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-### Clone the repository
-
-```bash
-git clone https://github.com/brainets/braina.git
-cd braina
-```
-
-### Verify the environment
+## Quick start
 
 ```bash
-uv run check_env.py        # Check core dependencies (frites, hoi, xgi, numpy, xarray, mne, jax)
-uv run mcp/verify_libs.py  # Run the test suite for Frites + HOI functions
-```
-
-## Setting up Claude Code
-
-```bash
-# Install
 npm install -g @anthropic-ai/claude-code
-```
-
-### Option A: Install as a plugin (recommended)
-
-Works from any directory, not just a clone of this repo:
-
-```bash
 claude plugin marketplace add brainets/braina
 claude plugin install braina@braina-plugins
 ```
 
-This registers the MCP server and the 4 braina skills (`orientation`,
-`frites-connectivity`, `hoi-metrics`, `workflows`) globally.
+That's it — no need to clone the repo or run from inside it. Then, in any
+Claude Code session:
 
-### Option B: Clone and run directly
+> **You:** I have LFP recordings from two regions during a working-memory
+> task (`data.nc`). Does region A drive region B?
+>
+> **Claude:** That's a directionality question — here's a ranked shortlist:
+> **covariance-based Granger causality** (the established default, robust to
+> monotonic nonlinearities), **transfer entropy** (scans a range of delays
+> directly), or **feature-specific information transfer** (if you care which
+> task feature is being transferred). Which fits best?
+>
+> **You:** Let's go with Granger causality.
+>
+> **Claude:** Running `frites_conn_covgc`... Done. X→Y is stronger than Y→X
+> in the 200–500 ms window after stimulus onset. Want to test that for
+> significance across your subjects next?
+
+## Skills
+
+| Skill | What it does |
+|---|---|
+| `orientation` | Triages a plain-language question against Frites and HOI, returning a ranked shortlist of tools with tradeoffs — including which statistical test fits. |
+| `frites-connectivity` | Explains each Frites connectivity tool (Granger causality, transfer entropy, PID, coherence, cross-correlation, ...) once one's been picked. |
+| `hoi-metrics` | Explains HOI's higher-order metrics (O-info, synergy, redundancy, DTC, ...) — including sign-convention gotchas and CPU/GPU notes. |
+| `workflows` | Explains permutation testing, cluster correction, bootstrapping, and fixed/random-effect inference, for Frites *and* HOI output. |
+
+## MCP tools
+
+<details>
+<summary>30+ tools wrapping Frites and HOI (click to expand)</summary>
+
+| Category | Tools |
+|---|---|
+| Data I/O | `inspect_data`, `read_pdf` |
+| Frites connectivity | `frites_conn_covgc`, `frites_conn_dfc`, `frites_conn_pid`, `frites_conn_ii`, `frites_conn_te`, `frites_conn_fit`, `frites_conn_spec`, `frites_conn_ccf` |
+| Frites workflows | `frites_wf_mi`, `frites_wf_stats`, `frites_wf_conn_comod` |
+| Frites simulation | `frites_sim_ar` |
+| HOI metrics | `hoi_oinfo`, `hoi_gradient_oinfo`, `hoi_infotopo`, `hoi_redundancy_mmi`, `hoi_synergy_mmi`, `hoi_rsi`, `hoi_dtc`, `hoi_get_nbest_mult` |
+
+Each tool wraps a Frites or HOI function with file-based I/O (`.npy` or
+`.nc`). See `mcp/braina_mcp.py` for exact signatures.
+
+</details>
+
+## Repo contents
+
+Beyond the plugin itself, this repo also carries the reference material the
+skills point to:
+
+- **`examples/`** — ~50 self-contained scripts (Frites + HOI), runnable with
+  `uv run examples/frites/conn/plot_covgc.py`.
+- **`tutorials/`** — longer walkthroughs, including a full SEEG analysis
+  pipeline and a Frites+HOI+XGI integration notebook.
+- **`usecases/`** — end-to-end analysis scenarios (AR simulation, dynamic FC,
+  higher-order interaction detection, Granger causality).
+- **`papers/`** — the theoretical background behind each method.
+
+<details>
+<summary>Developing on braina directly (instead of installing the plugin)</summary>
 
 ```bash
 git clone https://github.com/brainets/braina.git
 cd braina
+
+# Verify the environment
+uv run check_env.py
+uv run mcp/verify_libs.py
 
 # Register the MCP server (one-time setup)
 claude mcp add braina -- uv run mcp/braina_mcp.py
@@ -78,80 +116,39 @@ claude
 references `${CLAUDE_PLUGIN_ROOT}`, which only resolves inside a plugin
 install) — it does **not** auto-register the server for a plain clone, so
 the manual `claude mcp add` step above is still required here. This means
-`claude mcp list` will show a harmless warning about `braina` being
-defined in both `project` scope (from `.mcp.json`, left unresolved
-outside a plugin install) and `local` scope (from the command above) —
-the local one is what actually connects, and the warning can be ignored.
-**Don't run `claude mcp remove braina -s project`** to silence it — that
-rewrites the committed `.mcp.json` itself (emptying it), not just local
-config. Reads `CLAUDE.md` for project context. Use this option if
-actively developing on braina itself.
+`claude mcp list` will show a harmless warning about `braina` being defined
+in both `project` scope (from `.mcp.json`, left unresolved outside a plugin
+install) and `local` scope (from the command above) — the local one is what
+actually connects, and the warning can be ignored. **Don't run
+`claude mcp remove braina -s project`** to silence it — that rewrites the
+committed `.mcp.json` itself (emptying it), not just local config.
 
-## Project Structure
+Reads `CLAUDE.md` for project context.
+
+</details>
+
+<details>
+<summary>Project structure</summary>
 
 ```
 braina/
+├── .claude-plugin/
+│   ├── plugin.json         # Plugin manifest
+│   └── marketplace.json    # Self-hosted marketplace
+├── .mcp.json                # MCP server declaration (plugin use)
+├── skills/                  # orientation, frites-connectivity, hoi-metrics, workflows
 ├── mcp/
-│   ├── braina_mcp.py      # MCP server — 30+ tools wrapping Frites & HOI
-│   ├── verify_libs.py     # Test suite for all wrapped functions
-│   └── __init__.py
-├── examples/
-│   ├── frites/            # ~30 example scripts
-│   │   ├── conn/          # Connectivity metrics (covgc, dfc, spec, ccf, ...)
-│   │   ├── mi/            # Mutual information analysis
-│   │   ├── simulations/   # AR model data simulation
-│   │   ├── statistics/    # Statistical testing
-│   │   └── ...
-│   └── hoi/               # ~20 example scripts
-│       ├── metrics/       # O-info, synergy, redundancy, RSI, DTC
-│       ├── it/            # Information theory fundamentals
-│       └── ...
+│   ├── braina_mcp.py        # MCP server — 30+ tools wrapping Frites & HOI
+│   └── verify_libs.py       # Test suite for all wrapped functions
+├── examples/                # ~50 example scripts (frites/, hoi/)
 ├── tutorials/
-│   ├── multivariate_information_theory_frites_hoi_xgi/
-│   └── seeg_ebrains_frites/
-├── usecases/              # Real-world analysis scenarios
-│   ├── brainhack_26/      # BrainHack 2026 challenges
-│   ├── hoi/               # HOI redundancy/synergy detection
-│   ├── granger/           # Granger Causality analysis
-│   └── master_td/         # Master's travaux dirigée
-├── papers/                # Research papers (theoretical foundation)
-│
-├── CLAUDE.md              # Project context for Claude Code
-├── .claude/
-│   └── settings.local.json  # Claude Code permissions
-│
-└── check_env.py           # Environment verification
+├── usecases/
+├── papers/
+├── CLAUDE.md                 # Project context for Claude Code
+└── check_env.py              # Environment verification
 ```
 
-### MCP Server (`mcp/braina_mcp.py`)
-
-The central component. A [FastMCP](https://github.com/modelcontextprotocol/python-sdk) server that exposes 30+ tools over the standard MCP stdio transport. Each tool wraps a Frites or HOI function with file-based I/O (`.npy` or `.nc` files). Tool categories:
-
-| Category | Tools |
-|---|---|
-| Data I/O | `inspect_data`, `read_pdf` |
-| Frites connectivity | `frites_conn_covgc`, `frites_conn_dfc`, `frites_conn_pid`, `frites_conn_ii`, `frites_conn_te`, `frites_conn_fit`, `frites_conn_spec`, `frites_conn_ccf` |
-| Frites workflows | `frites_wf_mi`, `frites_wf_stats`, `frites_wf_conn_comod` |
-| Frites simulation | `frites_sim_ar` |
-| HOI metrics | `hoi_oinfo`, `hoi_gradient_oinfo`, `hoi_infotopo`, `hoi_redundancy_mmi`, `hoi_synergy_mmi`, `hoi_rsi`, `hoi_dtc`, `hoi_get_nbest_mult` |
-
-### Examples
-
-~50 self-contained Python scripts demonstrating Frites and HOI usage. Each script uses PEP 723 inline dependencies and can be run with `uv run`:
-
-```bash
-uv run examples/frites/conn/ex_conn_covgc.py
-uv run examples/hoi/metrics/ex_oinfo.py
-```
-
-### Tutorials
-
-- **`multivariate_information_theory_frites_hoi_xgi/`** — Integration of frites, hoi, and xgi for multivariate information theory analysis. Based on Giovanni Petri's [practical tutorial](https://github.com/lordgrilo/cnww-hoi).
-- **`seeg_ebrains_frites/`** — Analyzing SEEG data with frites. Dataset: Lachaux, J.-P., Rheims, S., Chatard, B., Dupin, M., & Bertrand, O. (2023). Human Intracranial Database (release-5). EBRAINS. https://doi.org/10.25493/FCPJ-NZ
-
-### Use Cases
-
-Real-world analysis prompts and solutions that demonstrate end-to-end workflows: AR model simulation, dynamic functional connectivity, higher-order interaction detection, and Granger causality analysis.
+</details>
 
 ## License
 
