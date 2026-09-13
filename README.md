@@ -17,7 +17,7 @@ data (fMRI, MEG, EEG, LFP, MUA) — using information-theoretical measures
 from two toolboxes built by the [BraiNets](https://github.com/brainets) team
 at the Institut de Neurosciences de la Timone:
 
-- **[Frites](https://github.com/brainets/frites)** — Framework for Information Theoretical analysis of Electrophysiological data and Statistics (Granger causality, transfer entropy, PID, dynamic FC,  mutual-information workflows).
+- **[Frites](https://github.com/brainets/frites)** — Framework for Information Theoretical analysis of Electrophysiological data and Statistics (Granger causality, transfer entropy, PID, dynamic FC,  mutual-information workflows, permutation-based statistics and group-level analysis).
 - **[HOI](https://github.com/brainets/hoi)** — Multivariate Information Theoretical tools for higher-order interaction analysis
   (O-information, synergy, redundancy, RSI, DTC, InfoTopo), GPU-capable via
   JAX.
