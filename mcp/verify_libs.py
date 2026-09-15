@@ -1,8 +1,8 @@
 # /// script
 # dependencies = [
-#   "frites",
+#   "frites>=0.4.5",
 #   "hoi",
-#   "numpy<2.0",
+#   "numpy",
 #   "xarray",
 #   "pandas"
 # ]

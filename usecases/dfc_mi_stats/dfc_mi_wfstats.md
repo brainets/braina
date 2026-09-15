@@ -37,7 +37,7 @@ experimental conditions (**PP** and **UP**, 4 trials each → 8 trials per rat):
 If you run this outside the repo environment, install the dependency:
 
 ```bash
-pip install "frites" "numpy<2.0" xarray netcdf4
+pip install "frites>=0.4.5" numpy xarray netcdf4
 ```
 <!-- #endregion -->
 

@@ -1,5 +1,5 @@
 # /// script
-# dependencies = ["frites", "numpy<2.0", "xarray", "netcdf4"]
+# dependencies = ["frites>=0.4.5", "numpy", "xarray", "netcdf4"]
 # ///
 """
 Single-trial DFC -> condition GCMI -> exact permutations -> group WfStats
