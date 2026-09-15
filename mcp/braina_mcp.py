@@ -1,9 +1,9 @@
 # /// script
 # dependencies = [
 #   "mcp<2",   # mcp 2.x renamed FastMCP to MCPServer and moved the import path
-#   "frites",
+#   "frites>=0.4.5",   # 0.4.4 and earlier crash on import under numpy>=2.0
 #   "hoi",
-#   "numpy<2.0",
+#   "numpy",
 #   "xarray",
 #   "pandas",
 #   "netcdf4",
@@ -559,8 +559,8 @@ def frites_wf_mi(data_path: str, y_path: str, output_path_prefix: str, mi_type: 
     times = data.coords['times'].values if isinstance(data, xr.DataArray) and 'times' in data.coords else None
     roi = data.coords['roi'].values if isinstance(data, xr.DataArray) and 'roi' in data.coords else None
     
-    ds = frites.dataset.DatasetEphy(data, y=y, times=times, roi=roi, verbose=False)
-    
+    ds = frites.dataset.DatasetEphy([data], y=y, times=times, roi=roi, verbose=False)
+
     wf = frites.workflow.WfMi(mi_type=mi_type, inference=inference, verbose=False)
     mi, pvalues = wf.fit(ds, n_perm=n_perm, n_jobs=n_jobs)
     
@@ -589,8 +589,8 @@ def frites_wf_conn_comod(data_path: str, output_path_prefix: str, inference: str
     times = data.coords['times'].values if isinstance(data, xr.DataArray) and 'times' in data.coords else None
     roi = data.coords['roi'].values if isinstance(data, xr.DataArray) and 'roi' in data.coords else None
     
-    ds = frites.dataset.DatasetEphy(data, times=times, roi=roi, verbose=False)
-    
+    ds = frites.dataset.DatasetEphy([data], times=times, roi=roi, verbose=False)
+
     wf = frites.workflow.WfConnComod(inference=inference, verbose=False)
     mi, pvalues = wf.fit(ds, n_perm=n_perm, n_jobs=n_jobs)
     

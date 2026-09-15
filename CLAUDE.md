@@ -62,4 +62,4 @@ Tool categories:
 - For library internals, read source on GitHub via `gh api` or `gh browse` against `brainets/frites` and `brainets/hoi`.
 - When writing analysis scripts, test with small dummy data first (see `mcp/verify_libs.py` for patterns).
 - Prefer JAX for high-performance math in HOI contexts; use xarray/MNE structures for Frites connectivity.
-- Numpy must be `<2.0` (required by current Frites/HOI versions).
+- Frites must be `>=0.4.5`; earlier versions crash on import under NumPy 2. HOI has never restricted the NumPy version. With Frites `>=0.4.5`, NumPy 2 is supported.
