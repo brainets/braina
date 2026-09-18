@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "braina": {
-      "command": "uv",
-      "args": ["run", "${CLAUDE_PLUGIN_ROOT}/mcp/braina_mcp.py"]
-    }
-  }
-}

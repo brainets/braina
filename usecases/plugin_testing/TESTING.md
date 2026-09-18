@@ -112,13 +112,16 @@ in a file nobody reads.
 the **opposite** of O-information's (positive = synergy for RSI, positive =
 redundancy for O-information) — not treat it as a contradiction.
 
-**5b. `get_nbest_mult` limitation**
+**5b. `get_nbest_mult` ranking**
 
 > Which combination of regions has the strongest higher-order interaction?
 
-*Check:* if this leads to the `get_nbest_mult` tool, Claude should tell you
-it currently only returns a value and a row index, **not** which actual
-regions that row corresponds to — not present it as a fully solved answer.
+*Check:* if this leads to the `hoi_get_nbest_mult` tool, Claude should (a)
+have saved the preceding `hoi_*` result as `.nc` (the `.npy` format drops the
+multiplet metadata and the tool refuses it), (b) report actual region
+combinations (e.g. "A / C / D"), not bare row indices, and (c) explain that
+the tool returns the most *positive* and the most *negative* multiplets
+separately — and say which of the two means synergy for the metric used.
 
 **5c. GPU vs CPU**
 

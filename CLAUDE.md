@@ -31,7 +31,7 @@ All scripts use `uv` with PEP 723 inline script metadata (`# /// script` blocks)
 
 ### MCP Server (`mcp/braina_mcp.py`)
 
-The central integration layer. A FastMCP server exposing 30+ tools that wrap Frites and HOI library functions with standardized file-based I/O. Each tool takes file paths as input (`.npy` or `.nc`), calls the underlying library function, and saves results. This is registered as a Claude Code MCP server (`braina`).
+The central integration layer. A FastMCP server exposing 22 tools that wrap Frites and HOI library functions with standardized file-based I/O. Each tool takes file paths as input (`.npy` or `.nc`), calls the underlying library function, saves results, and returns a text summary (shape, coords, min/mean/max). Exceptions are caught and returned as `Error in <tool>: ...` strings. The server is declared in `.claude-plugin/plugin.json` under `mcpServers`. This is registered as a Claude Code MCP server (`braina`).
 
 `load_data`/`save_data` are internal I/O helpers (not exposed as MCP tools) that handle the `.npy` vs `.nc` dispatch for every tool.
 
@@ -54,6 +54,9 @@ Tool categories:
 - HOI input: `(n_samples, n_features)` or `(n_samples, n_features, n_variables)`.
 - Use `.npy` for raw arrays, `.nc` (NetCDF/xarray) when metadata (ROI names, time coords, `sfreq`) must be preserved.
 - Sampling frequency stored in `xarray.DataArray.attrs['sfreq']`.
+- Frites only reads ROI names and times from a DataArray when the coordinates are named exactly `roi` and `times` (the wrappers pass these names explicitly via `_xr_kw`); other names fall back to `roi_0, roi_1, ...` and a 1 Hz axis.
+- Workflow tools (`frites_wf_mi`, `frites_wf_conn_comod`) accept a list of files (one per subject) or a `.nc` with a `subject` dimension; `inference='rfx'` requires at least 2 subjects.
+- HOI tools save `.nc` outputs with `multiplets`, `order` and (when the input had a named feature coordinate) `multiplet_names` coords; `hoi_get_nbest_mult` requires that `.nc` output.
 
 ## Working in this Repo
 

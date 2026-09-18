@@ -3,3 +3,6 @@ tutorials/seeg_ebrains_frites/datasets/seeg/*.nc
 
 # Userspace shortcut symlink auto-created by /etc/profile.d/int-shortcut.sh
 /brovelli.a
+
+# Python bytecode
+__pycache__/

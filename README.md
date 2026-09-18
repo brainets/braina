@@ -22,7 +22,7 @@ at the Institut de Neurosciences de la Timone:
   (O-information, synergy, redundancy, RSI, DTC, InfoTopo), GPU-capable via
   JAX.
 
-It ships as an MCP server (30+ tools wrapping Frites and HOI) plus 4 skills
+It ships as an MCP server (22 tools wrapping Frites and HOI) plus 4 skills
 that know how to pick the right tool, explain what it actually computes, and
 run the statistics correctly — grounded in the real library source, not just
 tool docstrings.
@@ -65,7 +65,7 @@ Claude Code session:
 ## MCP tools
 
 <details>
-<summary>30+ tools wrapping Frites and HOI (click to expand)</summary>
+<summary>22 tools wrapping Frites and HOI (click to expand)</summary>
 
 | Category | Tools |
 |---|---|
@@ -76,7 +76,11 @@ Claude Code session:
 | HOI metrics | `hoi_oinfo`, `hoi_gradient_oinfo`, `hoi_infotopo`, `hoi_redundancy_mmi`, `hoi_synergy_mmi`, `hoi_rsi`, `hoi_dtc`, `hoi_get_nbest_mult` |
 
 Each tool wraps a Frites or HOI function with file-based I/O (`.npy` or
-`.nc`). See `mcp/braina_mcp.py` for exact signatures.
+`.nc`) and returns a summary of the result (shape, coordinates, min/mean/max).
+Use `.nc` input with `roi` and `times` coordinates so that outputs keep ROI
+names and a time axis in seconds; HOI outputs saved as `.nc` keep the
+multiplet metadata that `hoi_get_nbest_mult` needs. See `mcp/braina_mcp.py`
+for exact signatures.
 
 </details>
 
@@ -110,16 +114,10 @@ claude mcp add braina -- uv run mcp/braina_mcp.py
 claude
 ```
 
-`.mcp.json` at the project root is used for the plugin packaging (it
-references `${CLAUDE_PLUGIN_ROOT}`, which only resolves inside a plugin
-install) — it does **not** auto-register the server for a plain clone, so
-the manual `claude mcp add` step above is still required here. This means
-`claude mcp list` will show a harmless warning about `braina` being defined
-in both `project` scope (from `.mcp.json`, left unresolved outside a plugin
-install) and `local` scope (from the command above) — the local one is what
-actually connects, and the warning can be ignored. **Don't run
-`claude mcp remove braina -s project`** to silence it — that rewrites the
-committed `.mcp.json` itself (emptying it), not just local config.
+The MCP server is declared in `.claude-plugin/plugin.json` (`mcpServers`,
+using `${CLAUDE_PLUGIN_ROOT}`), which only applies to a plugin install — a
+plain clone does not auto-register the server, hence the manual
+`claude mcp add` step above.
 
 Reads `CLAUDE.md` for project context.
 
@@ -131,12 +129,11 @@ Reads `CLAUDE.md` for project context.
 ```
 braina/
 ├── .claude-plugin/
-│   ├── plugin.json         # Plugin manifest
+│   ├── plugin.json         # Plugin manifest (incl. MCP server declaration)
 │   └── marketplace.json    # Self-hosted marketplace
-├── .mcp.json                # MCP server declaration (plugin use)
 ├── skills/                  # orientation, frites-connectivity, hoi-metrics, workflows
 ├── mcp/
-│   ├── braina_mcp.py        # MCP server — 30+ tools wrapping Frites & HOI
+│   ├── braina_mcp.py        # MCP server — 22 tools wrapping Frites & HOI
 │   └── verify_libs.py       # Test suite for all wrapped functions
 ├── examples/                # ~50 example scripts (frites/, hoi/)
 ├── tutorials/

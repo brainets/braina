@@ -34,8 +34,8 @@ sanity-checked before touching real data.
   regions and no clear pair in mind, run `hoi_oinfo` (or `hoi_infotopo`)
   across all regions first and inspect the raw output for the largest
   magnitudes before committing to a deeper analysis — `hoi_get_nbest_mult`
-  would normally be the tool for this, but see its warning in Step 3d
-  before reaching for it.
+  does exactly that ranking, provided the `hoi_*` output was saved as `.nc`
+  (see Step 3d).
 
 ## Step 2 — Frites: pairwise questions
 
@@ -137,11 +137,13 @@ how to test it for significance across subjects/trials.
 
 ### 3d. "Which subset of regions is worth analyzing at all?"
 
-1. **`hoi_get_nbest_mult`** — intended to search for the most informative
-   multiplets from a HOI metric's output. *Warning:* the braina version of
-   this tool currently returns only flat array indices and values, not
-   the actual region combinations — see the `hoi-metrics` skill before
-   relying on it to identify *which* regions to examine further.
+1. **`hoi_get_nbest_mult`** — ranks the multiplets of a HOI metric's `.nc`
+   output and resolves each one to the actual region names (taken from the
+   feature coordinate of the input `.nc`, e.g. `roi`). It returns the
+   `n_best` most positive *and* the `n_best` most negative multiplets, so
+   read the sign against the metric's convention. Requires the `hoi_*` tool
+   to have written a `.nc` file (`.npy` drops the multiplet metadata) — see
+   the `hoi-metrics` skill for details.
 
 ### 3e. "I want one number for how much the whole group shares in common"
 

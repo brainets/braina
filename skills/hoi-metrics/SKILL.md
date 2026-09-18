@@ -144,26 +144,37 @@ in `oinfo`).
 Reference: Te Sun 1978.
 API reference: https://brainets.github.io/hoi/api/generated/hoi.metrics.DTC.html
 
-## ⚠️ `hoi_get_nbest_mult` — currently limited, verify before trusting
+## `hoi_get_nbest_mult` — ranking multiplets and naming the regions
 
-**This tool does not do what its name/docstring imply.** The real
-`hoi.utils.get_nbest_mult()` resolves top values back to the actual
-*multiplet* (which combination of ROIs/features) they belong to — but
-that resolution needs the fitted model object's `.multiplets`/`.order`
-metadata, which only exists in memory right after `.fit()` runs. Every
-`hoi_*` tool in braina saves only the bare result array to disk and
-discards the model, so by the time `hoi_get_nbest_mult` loads that array
-back from a file, the multiplet metadata is already gone.
+`hoi.utils.get_nbest_mult()` needs, besides the values, the multiplet
+metadata (`model.multiplets`, `model.order`) that only exists on the fitted
+model in memory. Every `hoi_*` wrapper therefore writes that metadata into
+its `.nc` output as coordinates: `multiplets` (feature indices, e.g.
+`"0,2,3"`), `order` (multiplet size) and, when the input `.nc` had a
+coordinate on its feature dimension (e.g. `roi`), `multiplet_names` (e.g.
+`"A / C / D"`). `hoi_get_nbest_mult` reads those coordinates back and calls
+the real `get_nbest_mult` with `orders=`, `multiplets=` and `names=`, so the
+CSV it writes has the columns `index, order, hoi, multiplet, names`.
 
-What it actually returns: the top-N **values and their flat array
-index** — not which ROIs/features that index corresponds to. Treat the
-`index` column as an internal row number, not an interpretable multiplet
-label. If the actual multiplet identity is needed, this isn't the tool
-for it currently — cross-reference the row order against how the
-originating `hoi_*` call enumerated multiplets (`minsize`/`maxsize`
-combinatorial order), or flag to the user that this needs the underlying
-Python API (`hoi.utils.get_nbest_mult` called directly on the live model
-object) rather than the MCP tool.
+How the ranking works (this is HOI's own convention, not braina's):
+- It returns the **`n_best` most positive values and the `n_best` most
+  negative values**, positive first — up to `2 * n_best` rows. It is *not*
+  a ranking by absolute value.
+- Whether "positive" means redundancy or synergy depends on the metric
+  (see the sign-convention section above): for `oinfo` positive =
+  redundancy, for `rsi` positive = synergy. Always state which half of the
+  table is which.
+- `minsize` / `maxsize` filter by order before ranking (e.g. `minsize=3` to
+  ignore pairs; note that O-information is identically 0 for pairs).
+
+Gotchas:
+- `.npy` outputs drop the coordinates; the tool refuses them with an
+  explicit error. Re-run the `hoi_*` tool with a `.nc` `output_path`.
+- Region names only appear if the HOI input was a `.nc` with a coordinate
+  on its feature (second) dimension. With `.npy` input the `multiplet`
+  column still gives the feature indices, in the input's column order.
+- HOI does not accept xarray directly; the wrappers convert `.nc` input to
+  numpy and keep the names themselves.
 
 API reference: https://brainets.github.io/hoi/api/generated/hoi.utils.get_nbest_mult.html
 
