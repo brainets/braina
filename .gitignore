@@ -6,3 +6,7 @@ tutorials/seeg_ebrains_frites/datasets/seeg/*.nc
 
 # Python bytecode
 __pycache__/
+
+# Eval runs and test artefacts
+plugin/evals/results/
+.pytest_cache/

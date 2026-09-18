@@ -1,0 +1,32 @@
+{
+  "name": "braina",
+  "displayName": "Braina",
+  "version": "1.1.0",
+  "description": "AI-agent-assisted analysis of neural interactions using information-theoretical measures (Frites + HOI) on electrophysiological data (fMRI, MEG, EEG, LFP, MUA).",
+  "author": {
+    "name": "Andrea Brovelli",
+    "email": "andrea.brovelli@univ-amu.fr"
+  },
+  "homepage": "https://github.com/brainets/braina",
+  "repository": "https://github.com/brainets/braina",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "neuroscience",
+    "connectivity",
+    "information-theory",
+    "granger-causality",
+    "higher-order-interactions",
+    "fMRI",
+    "MEG",
+    "EEG"
+  ],
+  "mcpServers": {
+    "braina": {
+      "command": "uv",
+      "args": [
+        "run",
+        "${CLAUDE_PLUGIN_ROOT}/mcp/braina_mcp.py"
+      ]
+    }
+  }
+}

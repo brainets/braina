@@ -22,10 +22,11 @@ at the Institut de Neurosciences de la Timone:
   (O-information, synergy, redundancy, RSI, DTC, InfoTopo), GPU-capable via
   JAX.
 
-It ships as an MCP server (22 tools wrapping Frites and HOI) plus 4 skills
-that know how to pick the right tool, explain what it actually computes, and
-run the statistics correctly — grounded in the real library source, not just
-tool docstrings.
+It ships as an MCP server (34 tools wrapping Frites and HOI, plus data
+conversion and plotting) and 5 skills that know how to pick the right tool,
+explain what it actually computes, run the statistics correctly and check
+the installation — grounded in the real library source, not just tool
+docstrings.
 
 ## Quick start
 
@@ -35,8 +36,11 @@ claude plugin marketplace add brainets/braina
 claude plugin install braina@braina-plugins
 ```
 
-That's it — no need to clone the repo or run from inside it. Then, in any
-Claude Code session:
+That's it — no need to clone the repo or run from inside it. The first
+session pre-warms the Python environment in the background (about 150 MB of
+wheels, once); if the `braina` MCP server shows "Connection closed" in that
+very first session, run `/braina:check` or simply start a new session. Then,
+in any Claude Code session:
 
 > **You:** I have LFP recordings from two regions during a working-memory
 > task (`data.nc`). Does region A drive region B?
@@ -61,26 +65,31 @@ Claude Code session:
 | `frites-connectivity` | Explains each Frites connectivity tool (Granger causality, transfer entropy, PID, coherence, cross-correlation, ...) once one's been picked. |
 | `hoi-metrics` | Explains HOI's higher-order metrics (O-info, synergy, redundancy, DTC, ...) — including sign-convention gotchas and CPU/GPU notes. |
 | `workflows` | Explains permutation testing, cluster correction, bootstrapping, and fixed/random-effect inference, for Frites *and* HOI output. |
+| `check` | `/braina:check` — verifies the installation: versions, JAX backend (CPU/GPU), MCP connection, end-to-end smoke test. |
+
+Each skill is a short `SKILL.md` plus `references/` files that Claude reads
+on demand, so only the relevant detail enters the context.
 
 ## MCP tools
 
 <details>
-<summary>22 tools wrapping Frites and HOI (click to expand)</summary>
+<summary>34 tools wrapping Frites and HOI (click to expand)</summary>
 
 | Category | Tools |
 |---|---|
-| Data I/O | `inspect_data`, `read_pdf` |
-| Frites connectivity | `frites_conn_covgc`, `frites_conn_dfc`, `frites_conn_pid`, `frites_conn_ii`, `frites_conn_te`, `frites_conn_fit`, `frites_conn_spec`, `frites_conn_ccf` |
-| Frites workflows | `frites_wf_mi`, `frites_wf_stats`, `frites_wf_conn_comod` |
+| Data I/O | `inspect_data`, `convert_to_nc` (MNE `.fif`, `.mat`, `.csv`, `.npy` → labelled `.nc`), `plot_result` (PNG), `read_pdf` |
+| Frites connectivity | `frites_conn_covgc`, `frites_conn_dfc`, `frites_conn_pid`, `frites_conn_ii`, `frites_conn_te`, `frites_conn_fit`, `frites_conn_spec`, `frites_conn_ccf`, `frites_conn_reshape`, `frites_conn_net` |
+| Frites workflows | `frites_wf_mi` (multi-subject), `frites_wf_mi_combine`, `frites_wf_stats`, `frites_wf_conn_comod` |
 | Frites simulation | `frites_sim_ar` |
-| HOI metrics | `hoi_oinfo`, `hoi_gradient_oinfo`, `hoi_infotopo`, `hoi_redundancy_mmi`, `hoi_synergy_mmi`, `hoi_rsi`, `hoi_dtc`, `hoi_get_nbest_mult` |
+| HOI metrics | `hoi_oinfo`, `hoi_gradient_oinfo`, `hoi_infotopo`, `hoi_redundancy_mmi`, `hoi_synergy_mmi`, `hoi_rsi`, `hoi_dtc`, `hoi_tc`, `hoi_sinfo`, `hoi_infotot`, `hoi_transfer_entropy`, `hoi_dotot`, `hoi_redundancy_phiid`, `hoi_atoms_phiid`, `hoi_get_nbest_mult` |
 
 Each tool wraps a Frites or HOI function with file-based I/O (`.npy` or
 `.nc`) and returns a summary of the result (shape, coordinates, min/mean/max).
 Use `.nc` input with `roi` and `times` coordinates so that outputs keep ROI
 names and a time axis in seconds; HOI outputs saved as `.nc` keep the
-multiplet metadata that `hoi_get_nbest_mult` needs. See `mcp/braina_mcp.py`
-for exact signatures.
+multiplet metadata that `hoi_get_nbest_mult` needs. Every HOI metric accepts
+`method` (estimator) and bootstrap confidence intervals (`n_boots`). See
+`plugin/mcp/braina_mcp.py` for exact signatures.
 
 </details>
 
@@ -89,8 +98,9 @@ for exact signatures.
 Beyond the plugin itself, this repo also carries the reference material the
 skills point to:
 
-- **`examples/`** — ~50 self-contained scripts (Frites + HOI), runnable with
-  `uv run examples/frites/conn/plot_covgc.py`.
+- **`plugin/examples/`** — ~50 self-contained scripts (Frites + HOI), runnable with
+  `uv run plugin/examples/frites/conn/plot_covgc.py` (shipped with the plugin,
+  the skills point to them).
 - **`tutorials/`** — longer walkthroughs, including a full SEEG analysis
   pipeline and a Frites+HOI+XGI integration notebook.
 - **`usecases/`** — end-to-end analysis scenarios (AR simulation, dynamic FC,
@@ -104,20 +114,29 @@ skills point to:
 git clone https://github.com/brainets/braina.git
 cd braina
 
-# Verify the environment
+# Verify the environment and run the test suite
 uv run check_env.py
-uv run mcp/verify_libs.py
+uv run plugin/mcp/verify_libs.py
+uv run tests/run_tests.py            # pytest over all 34 MCP tools
+uv run plugin/scripts/smoke_test.py  # what /braina:check runs
 
 # Register the MCP server (one-time setup)
-claude mcp add braina -- uv run mcp/braina_mcp.py
+claude mcp add braina -- uv run plugin/mcp/braina_mcp.py
 
 claude
 ```
 
-The MCP server is declared in `.claude-plugin/plugin.json` (`mcpServers`,
-using `${CLAUDE_PLUGIN_ROOT}`), which only applies to a plugin install — a
-plain clone does not auto-register the server, hence the manual
-`claude mcp add` step above.
+`plugin/mcp/braina_mcp.py.lock` pins the server's dependencies (`uv lock
+--script plugin/mcp/braina_mcp.py` to refresh after changing them).
+Behavioural checks of the skills live in `plugin/evals/` and run with
+`claude plugin eval plugin`. CI (`.github/workflows/ci.yml`) runs the
+environment check, the library verification and the test suite.
+
+The MCP server is declared in `plugin/.claude-plugin/plugin.json`
+(`mcpServers`, using `${CLAUDE_PLUGIN_ROOT}`), which only applies to a plugin
+install — a plain clone does not auto-register the server, hence the manual
+`claude mcp add` step above. The marketplace installs only the `plugin/`
+directory (~2 MB); papers, tutorials and use cases stay in the repo.
 
 Reads `CLAUDE.md` for project context.
 
@@ -128,19 +147,25 @@ Reads `CLAUDE.md` for project context.
 
 ```
 braina/
-├── .claude-plugin/
-│   ├── plugin.json         # Plugin manifest (incl. MCP server declaration)
-│   └── marketplace.json    # Self-hosted marketplace
-├── skills/                  # orientation, frites-connectivity, hoi-metrics, workflows
-├── mcp/
-│   ├── braina_mcp.py        # MCP server — 22 tools wrapping Frites & HOI
-│   └── verify_libs.py       # Test suite for all wrapped functions
-├── examples/                # ~50 example scripts (frites/, hoi/)
-├── tutorials/
-├── usecases/
-├── papers/
-├── CLAUDE.md                 # Project context for Claude Code
-└── check_env.py              # Environment verification
+├── .claude-plugin/marketplace.json   # Self-hosted marketplace → source: ./plugin
+├── plugin/                           # Everything the plugin installs
+│   ├── .claude-plugin/plugin.json    # Manifest (incl. MCP server declaration)
+│   ├── mcp/
+│   │   ├── braina_mcp.py             # MCP server — 34 tools wrapping Frites & HOI
+│   │   ├── braina_mcp.py.lock        # uv lockfile for the server script
+│   │   └── verify_libs.py            # Library-level verification
+│   ├── skills/                       # orientation, frites-connectivity, hoi-metrics, workflows, check
+│   │   └── <skill>/SKILL.md + references/
+│   ├── examples/                     # ~50 example scripts (frites/, hoi/)
+│   ├── hooks/hooks.json              # SessionStart: pre-warm the uv environment
+│   ├── scripts/                      # warmup.sh, smoke_test.py
+│   └── evals/                        # `claude plugin eval` cases
+├── tests/                            # pytest suite (uv run tests/run_tests.py)
+├── .github/workflows/ci.yml
+├── tutorials/  usecases/  papers/  docs/
+├── CHANGELOG.md
+├── CLAUDE.md                         # Project context for Claude Code
+└── check_env.py                      # Environment verification
 ```
 
 </details>

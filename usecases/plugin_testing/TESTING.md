@@ -37,7 +37,10 @@ Start a fresh `claude` session (not inside the braina repo) and ask:
       result (which region drives which, roughly when).
 - [ ] It saved output somewhere sensible and told you where.
 
-If this fails outright, everything else below is moot — report it first.
+If this fails outright, run `/braina:check` (it prints versions, the JAX
+backend and runs a smoke test) and report its output first. A "Connection
+closed" for the `braina` server in the very first session after install is
+the environment still being downloaded; a second session normally works.
 
 ---
 
@@ -128,12 +131,18 @@ separately — and say which of the two means synergy for the metric used.
 > Will this run faster if I have a GPU available?
 
 *Check:* Claude should mention that braina's HOI tools run on CPU by
-default today (the dependency setup doesn't request GPU support), and that
-getting GPU acceleration requires an extra manual step.
+default today (the dependency setup doesn't request GPU support), that
+getting GPU acceleration requires an extra manual step, and how to see the
+active backend (`/braina:check`).
 
 ---
 
 ## 6. Try it on real data
+
+Braina can read MNE epochs (`-epo.fif`), MATLAB `.mat`, `.csv` and `.npy`
+files through `convert_to_nc`, which attaches ROI names, times and the
+sampling rate. Ask Claude to convert your file first and to `plot_result`
+what it computes.
 
 Once the synthetic round-trip in Section 1 works, point braina at a real
 dataset you have (even a small one). Real data tends to surface things

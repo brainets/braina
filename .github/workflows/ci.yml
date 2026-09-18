@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Check the environment
+        run: uv run check_env.py
+      - name: Library verification (Frites + HOI)
+        run: uv run plugin/mcp/verify_libs.py
+      - name: MCP tool tests
+        run: uv run tests/run_tests.py
+      - name: Plugin manifests are valid JSON
+        run: |
+          python3 -c "import json; json.load(open('.claude-plugin/marketplace.json')); json.load(open('plugin/.claude-plugin/plugin.json')); json.load(open('plugin/hooks/hooks.json')); print('manifests OK')"

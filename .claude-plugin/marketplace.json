@@ -1,12 +1,12 @@
 {
   "name": "braina-plugins",
   "owner": {
-    "name": "Andrea Brovelli — BraiNets, Institut de Neurosciences de la Timone"
+    "name": "Andrea Brovelli \u2014 BraiNets, Institut de Neurosciences de la Timone"
   },
   "plugins": [
     {
       "name": "braina",
-      "source": "."
+      "source": "./plugin"
     }
   ]
 }
